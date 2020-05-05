@@ -8,8 +8,8 @@ else
 endif
 if($1 == "core") then # run SDRAM Core level test case
    vlog -work work +define+$2 -f filelist_core.f
-   vsim -novopt tb_core
-   #run -all
+   vsim tb_core 
+   run -all
 else # Run SDRAM Top Level test cases
    vlog -work work +define+$2 -f filelist_top.f
 endif
