@@ -105,18 +105,18 @@ class seq_of_commands extends uvm_sequence #(app_transaction_in)
 			seq2.start(p_sequencer);
 		end
 		
-		// write sequence
-		for (int i = 0; i<10; i++)begin
-			wr_seq seq3 = init_seq::type_id::create("seq3");
-			assert(seq3.randomize());
-			seq3.start(p_sequencer);
-		end
-		
-		// read sequence
-		for (int i = 0; i<10; i++)begin
-			rd_seq seq4 = init_seq::type_id::create("seq4");
-			seq4.start(p_sequencer);
-		end
+		//// write sequence
+		//for (int i = 0; i<10; i++)begin
+		//	wr_seq seq3 = init_seq::type_id::create("seq3");
+		//	assert(seq3.randomize());
+		//	seq3.start(p_sequencer);
+		//end
+		//
+		//// read sequence
+		//for (int i = 0; i<10; i++)begin
+		//	rd_seq seq4 = init_seq::type_id::create("seq4");
+		//	seq4.start(p_sequencer);
+		//end
 	endtask:body
 endclass:seq_of_commands
 

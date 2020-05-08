@@ -9,7 +9,7 @@ z2
 cModel Technology
 Z0 d/home/ecelrc/students/cni//EE382M-Verification/sdr_ctrl/verif/run
 vIS42VM16400K
-Z1 !s110 1588643664
+Z1 !s110 1588820313
 !i10b 1
 !s100 mhknGB^JOK:P@z7dR@G2Y1
 IETf6nQ5kl9:>[g7j]c1KL2
@@ -23,7 +23,7 @@ Z4 OL;L;10.6;65
 r1
 !s85 0
 31
-Z5 !s108 1588643664.000000
+Z5 !s108 1588820313.000000
 Z6 !s107 ../../rtl/core/sdrc_define.v|../../rtl/core/sdrc_xfr_ctl.v|../../rtl/core/sdrc_req_gen.v|../../rtl/core/sdrc_bs_convert.v|../../rtl/core/sdrc_bank_fsm.v|../../rtl/core/sdrc_bank_ctl.v|../../rtl/core/sdrc_core.v|../model/mt48lc8m8a2.v|../model/mt48lc2m32b2.v|../model/IS42VM16400K.V|../tb/tb_core.sv|
 Z7 !s90 -work|work|+define+SDR_8BIT|-f|filelist_core.f|
 !i113 0
@@ -212,7 +212,7 @@ IN7RGPlc0@Cec8JK027Khh3
 !s105 tb_core_sv_unit
 S1
 R0
-w1588426705
+w1588794842
 8../tb/tb_core.sv
 F../tb/tb_core.sv
 L0 51
