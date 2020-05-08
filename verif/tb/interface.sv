@@ -27,24 +27,22 @@ logic [`APP_DW-1:0] 				app_wr_data         ; // Write Data
 logic [`APP_BW-1:0] 				app_wr_en_n         ; // Byte wise Write Enable
 
 		
-//------------------------------------------------
-// Configuration Parameter
-//------------------------------------------------
-logic [1:0]             			cfg_colbits         ; // 2'b00 - 8 Bit column address, 2'b01 - 9 Bit, 10 - 10 bit, 11 - 11Bits
-logic [3:0] 					cfg_sdr_tras_d      ; // Active to precharge delay
-logic [3:0]             			cfg_sdr_trp_d       ; // Precharge to active delay
-logic [3:0]            				cfg_sdr_trcd_d      ; // Active to R/W delay
-logic 						cfg_sdr_en          ; // Enable SDRAM controller
-logic [1:0] 					cfg_req_depth       ; // Maximum Request accepted by SDRAM controller
-logic [12:0] 					cfg_sdr_mode_reg    ;
-logic [2:0] 					cfg_sdr_cas         ; // SDRAM CAS Latency
-logic [3:0] 					cfg_sdr_trcar_d     ; // Auto-refresh period
-logic [3:0]            				cfg_sdr_twr_d       ; // Write recovery delay
-logic [`SDR_RFSH_TIMER_W-1 : 0] 		cfg_sdr_rfsh;		//period between auto-refresh commands issued by the controller
-logic [`SDR_RFSH_ROW_CNT_W -1 : 0] 		cfg_sdr_rfmax;		// maximum number of rows to be refreshed at a time
-//logic                   			app_req_dma_last;    // this signal should close the bank
-
-
+////------------------------------------------------
+//// Configuration Parameter
+////------------------------------------------------
+//logic [1:0]             			cfg_colbits         ; // 2'b00 - 8 Bit column address, 2'b01 - 9 Bit, 10 - 10 bit, 11 - 11Bits
+//logic [3:0] 					cfg_sdr_tras_d      ; // Active to precharge delay
+//logic [3:0]             			cfg_sdr_trp_d       ; // Precharge to active delay
+//logic [3:0]            				cfg_sdr_trcd_d      ; // Active to R/W delay
+//logic 						cfg_sdr_en          ; // Enable SDRAM controller
+//logic [1:0] 					cfg_req_depth       ; // Maximum Request accepted by SDRAM controller
+//logic [12:0] 					cfg_sdr_mode_reg    ;
+//logic [2:0] 					cfg_sdr_cas         ; // SDRAM CAS Latency
+//logic [3:0] 					cfg_sdr_trcar_d     ; // Auto-refresh period
+//logic [3:0]            				cfg_sdr_twr_d       ; // Write recovery delay
+//logic [`SDR_RFSH_TIMER_W-1 : 0] 		cfg_sdr_rfsh;		//period between auto-refresh commands issued by the controller
+//logic [`SDR_RFSH_ROW_CNT_W -1 : 0] 		cfg_sdr_rfmax;		// maximum number of rows to be refreshed at a time
+////logic                   			app_req_dma_last;    // this signal should close the bank
 endinterface: dut_in
 
 interface dut_out;
