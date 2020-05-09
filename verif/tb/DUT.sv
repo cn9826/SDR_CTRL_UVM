@@ -1,11 +1,9 @@
 `include "constants.sv"
 
-module DUT
+module CTRL_SDRAM
 (
 // General 
 	sdram_clk,
-	sdram_clk_d,
-	pad_clk,
 	reset_n,
 
 // Application Interface IN
@@ -47,8 +45,6 @@ module DUT
 // General
 //-------------------------------------------
 input			sdram_clk;
-input			sdram_clk_d;
-input			pad_clk;	
 input			reset_n;
 
 //-------------------------------------------
@@ -111,6 +107,13 @@ output 	reg			sdr_ras_n;
 output 	reg			sdr_cas_n;
 output 	reg			sdr_we_n;	
 output	reg			sdr_init_done      ; // SDRAM Init Done 
+
+
+//--------------------------------------------
+// Internal Clocks  
+//--------------------------------------------
+wire #(2.0) sdram_clk_d = sdram_clk;
+wire #(1.0) pad_clk     = sdram_clk_d;
 
 
 `ifdef SDR_32BIT
@@ -233,4 +236,4 @@ mt48lc8m8a2 #(.data_bits(8)) u_sdram8 (
           .Dqm                (sdr_dqm            )
      );
 `endif
-endmodule
+endmodule:CTRL_SDRAM

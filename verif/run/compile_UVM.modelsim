@@ -1,0 +1,13 @@
+#!/bin/csh -f
+
+if(! -e work) then
+   vlib work
+else
+   \rm -rf work
+   vlib work
+endif
+
+vlog -work work +define+$1 -f filelist_UVM.f
+vlog +cover -sv ../tb/interface.sv ../tb/sequences.sv ../tb/modules.sv ../tb/tests.sv ../tb/tb.sv
+vsim -novopt top 
+

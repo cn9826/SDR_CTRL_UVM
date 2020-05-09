@@ -22,19 +22,16 @@ class app_driver_in extends uvm_driver#(app_transaction_in);
 	virtual	dut_in	dut_vi_in;
 
 	function new (string name, uvm_component parent);
-		super.name(name, parent);
+		super.new(name, parent);
 	endfunction:new
 
 	function void build_phase(uvm_phase phase);
 		assert (uvm_config_db #(sdr_dut_config)::get(this, "", "dut_config", dut_config_0));
 		dut_vi_in = dut_config_0.dut_vi_in;
-	endfunction: buid_phase
+	endfunction: build_phase
 	
 	task run_phase(uvm_phase phase);
 		forever begin
-			dut_vi_in.sdram_clk_d = #2 dut_vi_in.sdram_clk;
-			dut_vi_in.pad_clk = #1 sdram_clk_d;
-			
 			//drive dut_vi_in signals from transactions
 			app_transaction_in app_tx_in;
 			@ (negedge dut_vi_in.sdram_clk);
@@ -58,6 +55,7 @@ class app_monitor_in extends uvm_monitor;
 // and TLM Analysis Port declarations to broadcast captured data to others
 	`uvm_component_utils(app_monitor_in)
 	uvm_analysis_port #(app_transaction_in) aport;
+	sdr_dut_config dut_config_0;
 	virtual dut_in 	dut_vi_in;		
 
 	function new(string name, uvm_component parent);
@@ -65,7 +63,7 @@ class app_monitor_in extends uvm_monitor;
 	endfunction:new
 
 	function void build_phase(uvm_phase phase);
-		//dut_config_0 = sdr_dut_config::type_id::create("config");
+		//dut_config_0 = sdr_dut_config::type_id::create("dut_config_0");
 		aport = new("aport",this);
 		assert( uvm_config_db#(sdr_dut_config)::get(this, "", "dut_config", dut_config_0));
 		dut_vi_in = dut_config_0.dut_vi_in; 
@@ -75,7 +73,7 @@ class app_monitor_in extends uvm_monitor;
 		// to introduce 1 clk cycle delay after the interface signal wiggles have happend 
 		@(negedge dut_vi_in.sdram_clk);
 		forever begin
-			app_transaction_in app_tx_in;
+			app_transaction_in app_tx_in = app_transaction_in::type_id::create("app_tx_in");
 			@(negedge dut_vi_in.sdram_clk);
 			app_tx_in.reset_n	=	dut_vi_in.reset_n;     
 			app_tx_in.app_req       =       dut_vi_in.app_req;     
@@ -98,11 +96,11 @@ class app_monitor_out extends uvm_monitor;
 	virtual dut_out	dut_vi_out;
 
 	function new(string name, uvm_component parent);
-		super.new(name, parent)
-	endfunction:new
+		super.new(name, parent);
+	endfunction
 
 	function void build_phase(uvm_phase phase);
-		//dut_config_0 = sdr_dut_config::type_id::create("config");
+		//dut_config_0 = sdr_dut_config::type_id::create("dut_config_0");
 		aport = new("aport", this);	
 		assert ( uvm_config_db#(sdr_dut_config)::get(this, "", "dut_config", dut_config_0));
 		dut_vi_out = dut_config_0.dut_vi_out;	
@@ -112,29 +110,33 @@ class app_monitor_out extends uvm_monitor;
 		@(negedge dut_vi_out.sdram_clk);	
 		@(negedge dut_vi_out.sdram_clk);
 		forever begin
-			app_transaction_out	app_tx_out;
-			
+			sdr_transaction_out sdr_tx_out = sdr_transaction_out::type_id::create("sdr_tx_out");
+			app_transaction_out app_tx_out = app_transaction_out::type_id::create("app_tx_out");		
 			@(negedge dut_vi_out.sdram_clk);
+			app_tx_out.app_req_ack		=	dut_vi_out.app_req_ack;
+			app_tx_out.app_wr_next_req	= 	dut_vi_out.app_wr_next_req;
+			app_tx_out.app_rd_data		= 	dut_vi_out.app_rd_data;
+
 			// command
-			app_tx_out.sdr_cs_n		=	dut_vi_out.sdr_cs_n;		
-        	        app_tx_out.sdr_cke      	=	dut_vi_out.sdr_cke;
-        	        app_tx_out.sdr_ras_n    	=	dut_vi_out.sdr_ras_n;
-        	        app_tx_out.sdr_cas_n    	=	dut_vi_out.sdr_cas_n;
-        	        app_tx_out.sdr_we_n     	=	dut_vi_out.sdr_we_n;	
-        	        app_tx_out.sdr_init_done	=	dut_vi_out.sdr_init_done;
+			sdr_tx_out.sdr_cs_n		=	dut_vi_out.sdr_cs_n;		
+        	        sdr_tx_out.sdr_cke      	=	dut_vi_out.sdr_cke;
+        	        sdr_tx_out.sdr_ras_n    	=	dut_vi_out.sdr_ras_n;
+        	        sdr_tx_out.sdr_cas_n    	=	dut_vi_out.sdr_cas_n;
+        	        sdr_tx_out.sdr_we_n     	=	dut_vi_out.sdr_we_n;	
+        	        sdr_tx_out.sdr_init_done	=	dut_vi_out.sdr_init_done;
         	        
 			//address
-			app_tx_out.sdr_ba  		=	dut_vi_out.sdr_ba;
-        	        app_tx_out.sdr_addr		=	dut_vi_out.sdr_addr;
+			sdr_tx_out.sdr_ba  		=	dut_vi_out.sdr_ba;
+        	        sdr_tx_out.sdr_addr		=	dut_vi_out.sdr_addr;
         	       
 		       	//data
-			app_tx_out.sdr_dqm 		=	dut_vi_out.sdr_dqm; 	
-        	        app_tx_out.pad_sdr_din		=	dut_vi_out.pad_sdr_din;	
-        	        app_tx_out.sdr_dout		=	dut_vi_out.sdr_dout;	
-        	        app_tx_out.sdr_den_n		=	dut_vi_out.sdr_den_n;	
+			sdr_tx_out.sdr_dqm 		=	dut_vi_out.sdr_dqm; 	
+        	        sdr_tx_out.pad_sdr_din		=	dut_vi_out.pad_sdr_din;	
+        	        sdr_tx_out.sdr_dout		=	dut_vi_out.sdr_dout;	
+        	        sdr_tx_out.sdr_den_n		=	dut_vi_out.sdr_den_n;	
 		end
 	endtask:run_phase
-endclass:app_moniter_out
+endclass:app_monitor_out
 
 class app_agent_in extends uvm_agent;
 // encapsulates a Sequencer, Driver, Monitor (only Monitor if passive) into a single entity by
@@ -157,10 +159,10 @@ class app_agent_in extends uvm_agent;
 		app_monitor_in_0	= app_monitor_in::type_id::create("app_monitor_in_0", this);
 	endfunction:build_phase
 
-	task connect_phase(uvm_phase phase);
+	function void connect_phase(uvm_phase phase);
 		app_driver_in_0.seq_item_port.connect(app_sequencer_in_0.seq_item_export);
 		app_monitor_in_0.aport.connect(aport);
-	endtask:connect_phase
+	endfunction:connect_phase
 endclass: app_agent_in
 
 class app_agent_out extends uvm_agent;
@@ -169,22 +171,22 @@ class app_agent_out extends uvm_agent;
 	uvm_analysis_port #(app_transaction_out) aport;	
 	app_monitor_out		app_monitor_out_0;
 	
-	function new(string name, uvm_component parent)
+	function new(string name, uvm_component parent);
 		super.new(name, parent);
 	endfunction:new
 	
-	function void build_phase(uvm_phase phase)
+	function void build_phase(uvm_phase phase);
 		aport = new("aport",this);
 		app_monitor_out_0 = app_monitor_out::type_id::create("app_monitor_out_0", this);
 	endfunction:build_phase
 
-	function void connect_phase(uvm_phase phase)
+	function void connect_phase(uvm_phase phase);
 		app_monitor_out_0.aport.connect(aport);
 	endfunction:connect_phase
 endclass:app_agent_out
 
 class app_only_env extends uvm_env;
-	`uvm_component_utils(top_env)
+	`uvm_component_utils(app_only_env)
 	app_agent_in		app_agent_in_0;
 	app_agent_out		app_agent_out_0;
 	// fill in declaration of subscribers
@@ -196,7 +198,7 @@ class app_only_env extends uvm_env;
 
 	function void build_phase(uvm_phase phase);
 		app_agent_in_0 = app_agent_in::type_id::create("app_agent_in_0", this);
-		app_agent_out_0 = app_agent_in::type_id::create("app_agent_out_0", this);
+		app_agent_out_0 = app_agent_out::type_id::create("app_agent_out_0", this);
 		// fill in instantiation of subscribers
 		// fill in instantiation of an Application Layer scoreboard
 	endfunction: build_phase
@@ -238,6 +240,6 @@ class app_only_test extends uvm_test;
        
        		uvm_config_db #(sdr_dut_config)::set(this, "*", "dut_config", dut_config_0);
 		top_env_0 = app_only_env::type_id::create("top_env_0", this);
-	endclass:app_only_test
+	endfunction: build_phase
 endclass:app_only_test
 endpackage:modules_pkg 

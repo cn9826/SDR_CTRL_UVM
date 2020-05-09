@@ -1,6 +1,7 @@
 `include "uvm_macros.svh"
 `include "constants.sv"
 package sequences;
+
 import uvm_pkg::*;
 
 class app_transaction_in extends uvm_sequence_item;	
@@ -26,7 +27,7 @@ class app_transaction_out extends uvm_sequence_item;
 	logic				app_wr_next_req;
 	logic	[`APP_DW-1 : 0]		app_rd_data;
 
-	function new (string name = "")
+	function new (string name = "");
 		super.new(name);
 	endfunction
 
@@ -53,7 +54,7 @@ class sdr_transaction_out extends uvm_sequence_item;
 	logic	[`SDR_DW-1:0]	sdr_dout;	//data written to SDRAM 
 	logic	[`SDR_BW-1:0]	sdr_den_n;	//SDRAM Data Enable
 	
-	function new (string name = "")
+	function new (string name = "");
 		super.new(name);
 	endfunction
 
@@ -61,7 +62,7 @@ endclass: sdr_transaction_out
 
 class reset_seq extends uvm_sequence #(app_transaction_in);
 	`uvm_object_utils(reset_seq)
-	o
+	
 	function new(string name = "");
 		super.new(name);
 	endfunction
@@ -71,7 +72,7 @@ class reset_seq extends uvm_sequence #(app_transaction_in);
 		app_tx_in = app_transaction_in::type_id::create("app_tx_in");
 		start_item(app_tx_in);
 		app_tx_in.reset_n	=	0;
-		app_tx_in.app_req	=	0;o
+		app_tx_in.app_req	=	0;
 		app_tx_in.app_req_addr	=	0;
 		app_tx_in.app_req_wr_n	=	0;
 		app_tx_in.app_req_wrap 	=	1;
@@ -82,7 +83,26 @@ class reset_seq extends uvm_sequence #(app_transaction_in);
 	endtask: body
 endclass:reset_seq
 
-class seq_of_commands extends uvm_sequence #(app_transaction_in)
+class init_seq extends uvm_sequence #(app_transaction_in);
+	`uvm_object_utils(init_seq)
+	
+	task body;
+		app_transaction_in app_tx_in = app_transaction_in::type_id::create("app_tx_in");
+		start_item(app_tx_in);
+		app_tx_in.reset_n	=	1;
+//		app_tx_in.app_req	=	0;
+//		app_tx_in.app_req_addr	=	0;
+//		app_tx_in.app_req_wr_n	=	0;
+//		app_tx_in.app_req_wrap 	=	1;
+//		app_tx_in.app_wr_data	= 	0;
+//		app_tx_in.app_wr_en_n	=	4'hF;
+//		app_tx_in.app_req_len 	=	0;
+		finish_item(app_tx_in);
+	endtask:body
+endclass:init_seq
+
+
+class seq_of_commands extends uvm_sequence #(app_transaction_in);
 	`uvm_object_utils(seq_of_commands)
 
 	// declare a p_sequencer handle
@@ -94,16 +114,17 @@ class seq_of_commands extends uvm_sequence #(app_transaction_in)
 
 	task body;
 		// reset sequence
-		for (int i = 0; i<10; i++)begin
+		for (int i = 0; i<4; i++)begin
 			reset_seq seq1 = reset_seq::type_id::create("seq1");
 			seq1.start(p_sequencer);
 		end
 		
-		//// initialization sequence
-		//for (int i = 0; i<10000; i++)begin
-		//	init_seq seq2 = init_seq::type_id::create("seq2");
-		//	seq2.start(p_sequencer);
-		//end
+		//initialization sequence: 
+		//150 cycles before sdr_init_done is HIGH
+		for (int i = 0; i<151; i++)begin
+			init_seq seq2 = init_seq::type_id::create("seq2");
+			seq2.start(p_sequencer);
+		end
 		
 		//// write sequence
 		//for (int i = 0; i<10; i++)begin
@@ -120,4 +141,4 @@ class seq_of_commands extends uvm_sequence #(app_transaction_in)
 	endtask:body
 endclass:seq_of_commands
 
-endpackage: sequences;
+endpackage: sequences
