@@ -56,7 +56,7 @@ class app_monitor_in extends uvm_monitor;
 // and translate it into transaction level data objects that can be sent to other components
 // It requires a virtual interface handle
 // and TLM Analysis Port declarations to broadcast captured data to others
-	`uvm_component_utils(app_monitor_in);
+	`uvm_component_utils(app_monitor_in)
 	uvm_analysis_port #(app_transaction_in) aport;
 	virtual dut_in 	dut_vi_in;		
 
@@ -127,7 +127,7 @@ class app_monitor_out extends uvm_monitor;
 			app_tx_out.sdr_ba  		=	dut_vi_out.sdr_ba;
         	        app_tx_out.sdr_addr		=	dut_vi_out.sdr_addr;
         	       
-		       	//
+		       	//data
 			app_tx_out.sdr_dqm 		=	dut_vi_out.sdr_dqm; 	
         	        app_tx_out.pad_sdr_din		=	dut_vi_out.pad_sdr_din;	
         	        app_tx_out.sdr_dout		=	dut_vi_out.sdr_dout;	
@@ -139,7 +139,7 @@ endclass:app_moniter_out
 class app_agent_in extends uvm_agent;
 // encapsulates a Sequencer, Driver, Monitor (only Monitor if passive) into a single entity by
 // instantiating and connecting the components together via TLM interfaces
-	`uvm_component_utils(app_agent_in);
+	`uvm_component_utils(app_agent_in)
 
 	uvm_analysis_port #(app_transaction_in) aport;	
 	app_sequencer_in 	app_sequencer_in_0;
@@ -154,7 +154,7 @@ class app_agent_in extends uvm_agent;
 		aport = new("aport", this);
 		app_sequencer_in_0 	= app_sequencer_in::type_id::create("app_sequencer_in_0", this);
 		app_driver_in_0		= app_driver_in::type_id::create("app_driver_in_0", this);
-		app_monitor_in_0		= app_monitor_in::type_id::create("app_monitor_in_0". this);
+		app_monitor_in_0	= app_monitor_in::type_id::create("app_monitor_in_0", this);
 	endfunction:build_phase
 
 	task connect_phase(uvm_phase phase);
@@ -164,7 +164,7 @@ class app_agent_in extends uvm_agent;
 endclass: app_agent_in
 
 class app_agent_out extends uvm_agent;
-	`uvm_component_utils(app_agent_out);
+	`uvm_component_utils(app_agent_out)
 
 	uvm_analysis_port #(app_transaction_out) aport;	
 	app_monitor_out		app_monitor_out_0;
@@ -184,7 +184,7 @@ class app_agent_out extends uvm_agent;
 endclass:app_agent_out
 
 class app_only_env extends uvm_env;
-	`uvm_component_utils(top_env);
+	`uvm_component_utils(top_env)
 	app_agent_in		app_agent_in_0;
 	app_agent_out		app_agent_out_0;
 	// fill in declaration of subscribers
@@ -218,7 +218,7 @@ class app_only_test extends uvm_test;
 // each testcase can override, tweak knobs, enable/disable agents, 
 // change variable values in the configuration table, 
 // and change default sequences for each sequencer in the verification environment
-	`uvm_component_utils(app_only_test);
+	`uvm_component_utils(app_only_test)
 	
 	sdr_dut_config 	dut_config_0;
 	app_only_env	top_env_0;
@@ -237,6 +237,7 @@ class app_only_test extends uvm_test;
         	  `uvm_fatal("NOVIF", "No virtual interface set for dut_out")
        
        		uvm_config_db #(sdr_dut_config)::set(this, "*", "dut_config", dut_config_0);
+		top_env_0 = app_only_env::type_id::create("top_env_0", this);
 	endclass:app_only_test
 endclass:app_only_test
 endpackage:modules_pkg 
