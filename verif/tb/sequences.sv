@@ -99,11 +99,11 @@ class seq_of_commands extends uvm_sequence #(app_transaction_in)
 			seq1.start(p_sequencer);
 		end
 		
-		// initialization sequence
-		for (int i = 0; i<10000; i++)begin
-			init_seq seq2 = init_seq::type_id::create("seq2");
-			seq2.start(p_sequencer);
-		end
+		//// initialization sequence
+		//for (int i = 0; i<10000; i++)begin
+		//	init_seq seq2 = init_seq::type_id::create("seq2");
+		//	seq2.start(p_sequencer);
+		//end
 		
 		//// write sequence
 		//for (int i = 0; i<10; i++)begin
