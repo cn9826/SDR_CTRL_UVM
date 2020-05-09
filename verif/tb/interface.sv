@@ -8,11 +8,7 @@ interface dut_in;
 // Global Signal
 // ----------------------------------------------
 logic                 			 	sdram_clk; 		// SDRAM Clock
-logic						sdram_clk_d;		// #2 delay from sdram_clk 
-logic                   			pad_clk; 		// #1 delay from sdram_clk_d SDRAM Clock from Pad, used for registering Read Data
 logic                   			reset_n             ; // Reset Signal
-logic [1:0]             			sdr_width           ; // 2'b00 - 32 Bit SDR, 2'b01 - 16 Bit SDR, 2'b1x - 8 Bit
-
 
 
 //------------------------------------------------
@@ -58,10 +54,11 @@ logic			sdr_we_n;
 logic			sdr_init_done;
 
 // address
-logic			sdr_ba;	
-logic			sdr_addr;
+logic	[1:0]		sdr_ba;	
+logic	[12:0]		sdr_addr;
 
 // data
+logic	[`SDR_DW-1:0]	Dq;		//SDRAM Read/Write Data Bus
 logic	[`SDR_BW-1:0]	sdr_dqm; 	//SDRAM Data Mask
 logic	[`SDR_DW-1:0]	pad_sdr_din; 	//data read from SDRAM 
 logic	[`SDR_DW-1:0]	sdr_dout;	//data written to SDRAM 
@@ -69,6 +66,7 @@ logic	[`SDR_BW-1:0]	sdr_den_n;	//SDRAM Data Enable
 //------------------------------------------------
 //	Application IF signals
 //------------------------------------------------
+logic			sdram_clk;
 logic			app_req_ack;
 logic 			app_wr_next_req;// next Write Data Request
 logic	[`APP_DW-1:0]	app_rd_data;				
