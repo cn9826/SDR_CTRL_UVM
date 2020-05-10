@@ -90,13 +90,13 @@ class init_seq extends uvm_sequence #(app_transaction_in);
 		app_transaction_in app_tx_in = app_transaction_in::type_id::create("app_tx_in");
 		start_item(app_tx_in);
 		app_tx_in.reset_n	=	1;
-//		app_tx_in.app_req	=	0;
-//		app_tx_in.app_req_addr	=	0;
-//		app_tx_in.app_req_wr_n	=	0;
-//		app_tx_in.app_req_wrap 	=	1;
-//		app_tx_in.app_wr_data	= 	0;
-//		app_tx_in.app_wr_en_n	=	4'hF;
-//		app_tx_in.app_req_len 	=	0;
+		app_tx_in.app_req	=	0;
+		app_tx_in.app_req_addr	=	0;
+		app_tx_in.app_req_wr_n	=	0;
+		app_tx_in.app_req_wrap 	=	1;
+		app_tx_in.app_wr_data	= 	0;
+		app_tx_in.app_wr_en_n	=	4'hF;
+		app_tx_in.app_req_len 	=	0;
 		finish_item(app_tx_in);
 	endtask:body
 endclass:init_seq

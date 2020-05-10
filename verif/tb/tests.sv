@@ -1,8 +1,8 @@
 package tests;
 `include "uvm_macros.svh"
 import modules_pkg::*;
-import uvm_pkg::*
-import sequences::*
+import uvm_pkg::*;
+import sequences::*;
 //import scoreboard::*;
 
 class app_layer_test1 extends app_only_test; 
@@ -20,4 +20,4 @@ class app_layer_test1 extends app_only_test;
 		phase.drop_objection(this);	
 	endtask:run_phase
 endclass: app_layer_test1
-endpackage tests
+endpackage: tests
