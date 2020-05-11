@@ -56,6 +56,9 @@ parameter P_SYS = 10;	// 100 MHz
 
 dut_in 	dut_in_0();
 dut_out dut_out_0();
+int 	num_self_checks;
+
+queue_write	fifo_write;
 
 initial begin
 	dut_in_0.sdram_clk <= 1;
@@ -79,11 +82,20 @@ dut u_dut(
 
 
 initial begin
+	num_self_checks = 2;
 	uvm_config_db #(virtual dut_in)::set(null,"uvm_test_top","dut_vi_in",dut_in_0);
 	uvm_config_db #(virtual dut_out)::set(null,"uvm_test_top","dut_vi_out",dut_out_0);
+		
 	uvm_top.finish_on_completion = 1;
-
-	run_test("app_layer_test1");
+	
+	if (num_self_checks == 1) 
+		run_test("single_wr_rd_test");
+	else begin
+		fifo_write = new();
+		uvm_config_db #(int)::set(null,"uvm_test_top.*","num_self_checks",num_self_checks);
+		uvm_config_db #(queue_write)::set(null, "uvm_test_top.*", "queue_write", fifo_write);
+		run_test("multi_wr_rd_test");
+	end
 end
 
 endmodule: top

@@ -12,6 +12,36 @@ class sdr_dut_config extends uvm_object;
 
 endclass:sdr_dut_config
 
+class queue_write extends uvm_object;
+	`uvm_object_utils(queue_write)
+
+	// fifo to store and pop app layer write address
+	logic	[`APP_AW-1:0]	fifo_wr_addr_in[$];
+	// fifo to store and pop app layer write data	
+	logic	[`APP_DW-1:0]	fifo_wr_data_in[$];	
+	// index of the burst write sequence
+	int			fifo_wr_idx_in[$];
+	function void push_addr_data_idx(input logic [`APP_AW-1:0] wr_addr, 
+				     input logic [`APP_DW-1:0] wr_data,
+				     int burst_wr_idx);
+		fifo_wr_addr_in.push_back(wr_addr);
+		fifo_wr_data_in.push_back(wr_data);
+		fifo_wr_idx_in.push_back(burst_wr_idx);
+	endfunction: push_addr_data_idx
+	
+	function logic [`APP_AW-1:0] pop_addr();
+		return (fifo_wr_addr_in.pop_front());
+	endfunction: pop_addr
+	
+	function logic [`APP_DW-1:0] pop_data();
+		return (fifo_wr_data_in.pop_front());
+	endfunction: pop_data
+	
+	function int pop_idx();
+		return (fifo_wr_idx_in.pop_front());
+	endfunction: pop_idx
+
+endclass:queue_write
 
 class app_transaction_in extends uvm_sequence_item;	
 	`uvm_object_utils (app_transaction_in)
@@ -112,9 +142,10 @@ endclass:init_seq
 
 class write_seq_row2col extends uvm_sequence #(app_transaction_in);
 	`uvm_object_utils(write_seq_row2col)
-	
-	task body;
-		app_transaction_in app_tx_in = app_transaction_in::type_id::create("app_tx_in");
+	app_transaction_in app_tx_in;
+
+	task body;	
+		app_tx_in = app_transaction_in::type_id::create("app_tx_in");
 		start_item(app_tx_in);
 		assert(app_tx_in.randomize());
 		app_tx_in.reset_n	=	1;	
@@ -182,10 +213,11 @@ class write_seq_col extends uvm_sequence #(app_transaction_in);
 // "app_req_addr" remains the same as in row2col_tx_in
 // "app_wr_data" is randomized again
 	`uvm_object_utils(write_seq_col)
-	 app_transaction_in		row2col_tx_in;
-	
+	app_transaction_in		row2col_tx_in;
+	app_transaction_in		app_tx_in;
+
 	task body;
-		app_transaction_in app_tx_in;
+		//app_transaction_in app_tx_in;
 		
 		if (!uvm_config_db#(app_transaction_in)::get(null, "uvm_test_top.top_env_0.app_agent_in_0.app_sequencer_in_0.*", "write_seq_row2col_tx_in", row2col_tx_in))
 			`uvm_error("COL_PREV_TX", "Could not get the previous randomized requested app_tx_in in \"write_seq_col\" sequence")
@@ -265,14 +297,25 @@ class read_seq_row2col extends uvm_sequence #(app_transaction_in);
 // the initial row2col read request
 // both "app_wr_data", "app_req_addr" remains the same as in row2col_tx_in
 	`uvm_object_utils(read_seq_row2col)
-	 app_transaction_in		row2col_tx_in;
-	
+	app_transaction_in		row2col_tx_in;
+	int				num_self_checks;
+	queue_write			fifo_write;	
+
 	task body;
 		app_transaction_in app_tx_in;
 		
 		if (!uvm_config_db#(app_transaction_in)::get(null, "uvm_test_top.top_env_0.app_agent_in_0.app_sequencer_in_0.*", "write_seq_row2col_tx_in", row2col_tx_in))
 			`uvm_error("READ_ROW2COL_SEQ_PREV_TX", "Could not get the previous randomized requested app_tx_in in \"read_seq_row2col\" sequence")
-				
+
+		// get num_self_checks;
+		if (!uvm_config_db #(int)::get(null, "uvm_test_top.top_env_0.*", "num_self_checks", num_self_checks))
+			`uvm_fatal("READ_SEQ_ROW2COL_SEQ_NUM_CHECKS", "Could not find \"num_self_checks\" from config DB")
+		if (num_self_checks > 1) begin
+			// get queue fifo for write seuqnece;
+			if (!uvm_config_db #(queue_write)::get(null, "uvm_test_top.top_env_0.*", "queue_write", fifo_write))
+				`uvm_fatal("READ_SEQ_RWO2COL_NUM_CHECKS", "Could not find \"fifo_write\" from config DB")
+		end
+		
 		app_tx_in = app_transaction_in::type_id::create("app_tx_in");
 		start_item(app_tx_in);
 		app_tx_in.reset_n	=	1;	
@@ -281,8 +324,20 @@ class read_seq_row2col extends uvm_sequence #(app_transaction_in);
 		app_tx_in.app_req_wrap 	=	0;
 		app_tx_in.app_wr_en_n	=	4'h0;	
 		app_tx_in.app_req_len 	=	9'h4;
-		app_tx_in.app_req_addr	=	row2col_tx_in.app_req_addr;
+		app_tx_in.app_req_addr	=	(num_self_checks == 1) ? row2col_tx_in.app_req_addr : (fifo_write.pop_addr());
 		app_tx_in.app_wr_data   = 	row2col_tx_in.app_wr_data;
+		if (num_self_checks > 1) begin
+			fifo_write.pop_data();
+			fifo_write.pop_idx();
+			// pop additional app_req_len - 1 times from queue fifo
+			for (int i= 0; i < app_tx_in.app_req_len-1; i++) begin
+				fifo_write.pop_addr();
+				fifo_write.pop_data();
+				fifo_write.pop_idx();
+			end
+			uvm_config_db #(queue_write)::set(null, "uvm_test_top.*", "queue_write", fifo_write);	
+		end
+		uvm_config_db #(app_transaction_in)::set(null,"uvm_test_top.top_env_0.app_agent_in_0.app_sequencer_in_0.*", "read_seq_row2col_tx_in", app_tx_in);
 		finish_item(app_tx_in);
 	endtask: body
 endclass:read_seq_row2col
@@ -294,8 +349,8 @@ class read_seq_row2col_reqheld extends uvm_sequence #(app_transaction_in);
 	task body;
 		app_transaction_in app_tx_in;
 		
-		if (!uvm_config_db#(app_transaction_in)::get(null, "uvm_test_top.top_env_0.app_agent_in_0.app_sequencer_in_0.*", "write_seq_row2col_tx_in", row2col_tx_in))
-			`uvm_error("ROW2COL_REQHELD_PREV_TX", "Could not get the previous randomized requested app_tx_in in \"write_seq_row2col_reqheld\" sequence")
+		if (!uvm_config_db#(app_transaction_in)::get(null, "uvm_test_top.top_env_0.app_agent_in_0.app_sequencer_in_0.*", "read_seq_row2col_tx_in", row2col_tx_in))
+			`uvm_error("ROW2COL_REQHELD_PREV_TX", "Could not get the previous randomized requested \"read_seq_row2col_tx_in\" in \"read_seq_row2col_reqheld\" sequence")
 				
 		app_tx_in = app_transaction_in::type_id::create("app_tx_in");
 		start_item(app_tx_in);
@@ -321,9 +376,6 @@ class read_seq_wait1 extends uvm_sequence #(app_transaction_in);
 	task body;
 		app_transaction_in app_tx_in;
 		
-		//if (!uvm_config_db#(app_transaction_in)::get(null, "uvm_test_top.top_env_0.app_agent_in_0.app_sequencer_in_0.*", "write_seq_row2col_tx_in", row2col_tx_in))
-		//	`uvm_error("WAIT1_SEQ_PREV_TX", "Could not get the previous randomized requested app_tx_in in \"write_seq_wait1\" sequence")
-				
 		app_tx_in = app_transaction_in::type_id::create("app_tx_in");
 		start_item(app_tx_in);
 		app_tx_in.reset_n	=	1;	
@@ -339,8 +391,8 @@ class read_seq_wait1 extends uvm_sequence #(app_transaction_in);
 endclass:read_seq_wait1
 
 
-class seq_of_commands extends uvm_sequence #(app_transaction_in);
-	`uvm_object_utils(seq_of_commands)
+class seq_of_commands_single extends uvm_sequence #(app_transaction_in);
+	`uvm_object_utils(seq_of_commands_single)
 
 	// declare a p_sequencer handle
 	`uvm_declare_p_sequencer(uvm_sequencer#(app_transaction_in))
@@ -456,6 +508,141 @@ class seq_of_commands extends uvm_sequence #(app_transaction_in);
 			end
 		
 	endtask:body
-endclass:seq_of_commands
+endclass:seq_of_commands_single
+
+
+class seq_of_commands_multi extends  uvm_sequence #(app_transaction_in);
+// combination of write sequences iterated for multiple burst write accesses	
+	`uvm_object_utils(seq_of_commands_multi)
+	
+	// declare a p_sequencer handle
+	`uvm_declare_p_sequencer(uvm_sequencer#(app_transaction_in))
+		
+	queue_write		fifo_write;
+	int			num_self_checks;
+	sdr_dut_config		dut_config_0;
+	virtual dut_out		dut_vi_out;
+	virtual dut_in		dut_vi_in;
+	int			rd_valid_cnt;
+
+	task body;
+		reset_seq			seq_reset;
+		init_seq			seq_init;
+		write_seq_row2col		seq1;
+		write_seq_row2col_reqheld	seq2;
+		write_seq_wait1			seq3;
+		write_seq_col			seq4;
+		write_seq_wait2			seq5;
+		write_read_intld		seq6;
+		read_seq_row2col		seq7;
+		read_seq_row2col_reqheld	seq8;
+		read_seq_wait1			seq9;
+
+		// get virtual interfaces
+		if (!uvm_config_db #(sdr_dut_config)::get(null, "uvm_test_top.top_env_0.*", "dut_config", dut_config_0))
+			`uvm_fatal("CONSCTV_BURST_WR_SEQ_CONFIG", "Could not find a \"sdr_dut_config\" handle")
+		
+		dut_vi_in  = dut_config_0.dut_vi_in;
+		dut_vi_out = dut_config_0.dut_vi_out;
+
+		// get num_self_checks;
+		if (!uvm_config_db #(int)::get(null, "uvm_test_top.top_env_0.*", "num_self_checks", num_self_checks))
+			`uvm_fatal("CONSCTV_BURST_WR_SEQ_NUM_CHECKS", "Could not find \"num_self_checks\" from config DB")
+			
+		// get queue fifo for write seuqnece;
+		if (!uvm_config_db #(queue_write)::get(null, "uvm_test_top.top_env_0.*", "queue_write", fifo_write))
+			`uvm_fatal("CONSCTV_BURST_WR_SEQ_NUM_CHECKS", "Could not find \"fifo_write\" from config DB")
+				
+		//---------------------------
+		// reset sequence
+		//---------------------------
+		for (int i = 0; i<4; i++) begin
+			seq_reset = reset_seq::type_id::create("seq_reset");
+			seq_reset.start(p_sequencer);
+		end
+		//---------------------------
+		//initialization sequence:
+		//---------------------------
+		//150 cycles before sdr_init_done is HIGH
+		for (int i = 0; i<151; i++) begin
+			seq_init = init_seq::type_id::create("seq_init");
+			seq_init.start(p_sequencer);
+		end
+
+		
+		for (int i = 1; i <= num_self_checks; i++) begin
+			//---------------------------
+			// Burst Write Sequence:		
+			//---------------------------
+			// write sequence row2column called once
+			seq1 = write_seq_row2col::type_id::create("seq1");
+			assert(seq1.randomize());
+			seq1.start(p_sequencer);
+			fifo_write.push_addr_data_idx(seq1.app_tx_in.app_req_addr,
+						      seq1.app_tx_in.app_wr_data,
+						      i);
+
+			// write sequence row2column reqheld called until app_req_ack is HIGH 
+			while (!dut_vi_out.app_req_ack) begin
+				seq2 = write_seq_row2col_reqheld::type_id::create("seq4");
+				seq2.start(p_sequencer);
+			end
+
+			// wait1 sequence called between when initial row2col write request is acknowledged
+			// and subsequent burst write requests 
+			while (!dut_vi_out.app_wr_next_req) begin
+				seq3 = write_seq_wait1::type_id::create("seq3");
+				seq3.start(p_sequencer);
+			end
+			
+			// subsequent burst write sequences	
+			for (int j = 0; j < (dut_vi_in.app_req_len-1); j++) begin
+				// subsequent burst write sequence called
+				seq4 = write_seq_col::type_id::create("seq4");
+				seq4.start(p_sequencer);
+				fifo_write.push_addr_data_idx(seq4.app_tx_in.app_req_addr,
+							      seq4.app_tx_in.app_wr_data,
+							      i);
+
+				while (!dut_vi_out.app_wr_next_req) begin
+					// wait2 sequence called between subsequent burst write sequences	
+					seq5 = write_seq_wait2::type_id::create("seq5");	
+					seq5.start(p_sequencer);
+				end
+			end
+		end
+		uvm_config_db#(queue_write)::set(null, "uvm_test_top.*", "queue_write", fifo_write);
+		
+		//Interlude Sequence between Write and Read
+		for (int i = 0; i < 5; i++) begin
+			seq6 = write_read_intld::type_id::create("seq6");
+			seq6.start(p_sequencer);
+		end
+
+		for (int i = 1; i <= num_self_checks; i++) begin
+			//---------------------------
+			// Burst Read Sequence:		
+			//---------------------------
+			// read sequence row2column called once
+			seq7 = read_seq_row2col::type_id::create("seq7");
+			seq7.start(p_sequencer);
+
+			// read sequence row2column reqheld called until app_req_ack is HIGH 
+			while (!dut_vi_out.app_req_ack) begin
+				seq8 = read_seq_row2col_reqheld::type_id::create("seq8");
+				seq8.start(p_sequencer);
+			end
+			// read wait sequence is called until rd_valid_cnt == app_req_len
+			rd_valid_cnt = 0;
+				while (rd_valid_cnt < dut_vi_in.app_req_len) begin
+					seq9 = read_seq_wait1::type_id::create("seq9");
+					seq9.start(p_sequencer);
+					@(negedge dut_vi_out.sdram_clk);
+					if (dut_vi_out.app_rd_valid)
+						rd_valid_cnt++;
+				end
+		end
+	endtask:body
+endclass: seq_of_commands_multi
 
 endpackage: sequences

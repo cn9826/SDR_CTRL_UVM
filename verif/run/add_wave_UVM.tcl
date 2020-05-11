@@ -12,6 +12,7 @@ add wave -position insertpoint -group "app layer input I/F" /top/dut_in_0/app_wr
 
 
 # application layer output I/F signals
+add wave -position insertpoint -group "app layer output I/F" /top/dut_out_0/sdr_init_done 
 add wave -position insertpoint -group "app layer output I/F" /top/dut_out_0/app_req_ack 
 add wave -position insertpoint -group "app layer output I/F" /top/dut_out_0/app_wr_next_req
 add wave -position insertpoint -group "app layer output I/F" /top/dut_out_0/app_rd_data
