@@ -8,51 +8,180 @@ z2
 !i10f 100
 cModel Technology
 Z0 d/home/ecelrc/students/cni//EE382M-Verification/sdr_ctrl/verif/run
-vIS42VM16400K
-Z1 !s110 1588820313
-!i10b 1
-!s100 mhknGB^JOK:P@z7dR@G2Y1
-IETf6nQ5kl9:>[g7j]c1KL2
+vCTRL_SDRAM
+Z1 DXx6 sv_std 3 std 0 22 AD7iAPLo6nTIKk<N0eo=D3
 Z2 VDg1SIo80bB@j0V0VzS_@n1
-R0
-Z3 w1588349421
-8../model/IS42VM16400K.V
-F../model/IS42VM16400K.V
-L0 22
-Z4 OL;L;10.6;65
 r1
 !s85 0
 31
-Z5 !s108 1588820313.000000
-Z6 !s107 ../../rtl/core/sdrc_define.v|../../rtl/core/sdrc_xfr_ctl.v|../../rtl/core/sdrc_req_gen.v|../../rtl/core/sdrc_bs_convert.v|../../rtl/core/sdrc_bank_fsm.v|../../rtl/core/sdrc_bank_ctl.v|../../rtl/core/sdrc_core.v|../model/mt48lc8m8a2.v|../model/mt48lc2m32b2.v|../model/IS42VM16400K.V|../tb/tb_core.sv|
-Z7 !s90 -work|work|+define+SDR_8BIT|-f|filelist_core.f|
+!i10b 1
+!s100 d8:^dAl>_@6dSnl>3Ro723
+Ie@9GHAoQ9BSYF2SoalBWF0
+Z3 !s105 tb_sv_unit
+S1
+R0
+Z4 w1589055052
+8../tb/DUT.sv
+Z5 F../tb/DUT.sv
+L0 3
+Z6 OL;L;10.6;65
+Z7 !s108 1589154675.000000
+Z8 !s107 ../tb/DUT.sv|/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_deprecated_defines.svh|/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_reg_defines.svh|/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_callback_defines.svh|/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_sequence_defines.svh|/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/tlm1/uvm_tlm_imps.svh|/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_tlm_defines.svh|/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_printer_defines.svh|/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_object_defines.svh|/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_phase_defines.svh|/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_message_defines.svh|/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_version_defines.svh|/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/uvm_macros.svh|../tb/constants.sv|../tb/tb.sv|../tb/tests.sv|../tb/modules.sv|../tb/sequences.sv|../tb/interface.sv|
+Z9 !s90 +cover|-sv|../tb/interface.sv|../tb/sequences.sv|../tb/modules.sv|../tb/tests.sv|../tb/tb.sv|
 !i113 0
-Z8 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
-Z9 !s92 -work work +define+SDR_8BIT +define+S50 +incdir+../../rtl/core -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
-Z10 tCvgOpt 0
-n@i@s42@v@m16400@k
-vmt48lc2m32b2
+Z10 !s102 +cover
+Z11 o+cover -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z12 tCvgOpt 0
+n@c@t@r@l_@s@d@r@a@m
+vdut
 R1
+Z13 DXx6 mtiUvm 7 uvm_pkg 0 22 oMKUklN?>LE6@MJe7=2><1
+Z14 DXx4 work 9 sequences 0 22 HCFJ4NDL96z[Z<VLJnLHj2
+Z15 DXx4 work 11 modules_pkg 0 22 :RQGj>`;eoeLlW<RhiCgB3
+Z16 DXx4 work 5 tests 0 22 OQGHb=Xo5h^Y=NGn`5Q@g0
+Z17 DXx4 work 10 tb_sv_unit 0 22 LiIQ_7ILDQf]5>GMED9m12
+R2
+r1
+!s85 0
+31
+!i10b 1
+!s100 DgL=Gl5jiJ5e[XW:6oMAN3
+I8BiKViKoZ8Dn;8VlhHHf63
+R3
+S1
+R0
+R4
+Z18 8../tb/tb.sv
+Z19 F../tb/tb.sv
+L0 12
+R6
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R12
+Ydut_in
+R1
+R2
+r1
+!s85 0
+31
+!i10b 1
+!s100 z>_YlD`^LhhCLfH6GOW3h3
+ITZ:X934obKDFzdWjccIB22
+Z20 !s105 interface_sv_unit
+S1
+R0
+R4
+Z21 8../tb/interface.sv
+Z22 F../tb/interface.sv
+L0 2
+R6
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R12
+Ydut_out
+R1
+R2
+r1
+!s85 0
+31
+!i10b 1
+!s100 3_IkjJiR:[;jb>7oME7mm0
+IJPjg20`_cjcXFNaEKd;=I0
+R20
+S1
+R0
+R4
+R21
+R22
+Z23 L0 44
+R6
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R12
+vIS42VM16400K
+!s110 1589154674
+!i10b 1
+!s100 mhknGB^JOK:P@z7dR@G2Y1
+IETf6nQ5kl9:>[g7j]c1KL2
+R2
+R0
+Z24 w1588349421
+8../model/IS42VM16400K.V
+F../model/IS42VM16400K.V
+L0 22
+R6
+r1
+!s85 0
+31
+Z25 !s108 1589154670.000000
+Z26 !s107 ../../rtl/core/sdrc_define.v|../../rtl/core/sdrc_xfr_ctl.v|../../rtl/core/sdrc_req_gen.v|../../rtl/core/sdrc_bs_convert.v|../../rtl/core/sdrc_bank_fsm.v|../../rtl/core/sdrc_bank_ctl.v|../../rtl/core/sdrc_core.v|../model/mt48lc8m8a2.v|../model/mt48lc2m32b2.v|../model/IS42VM16400K.V|
+Z27 !s90 -work|work|+define+SDR_8BIT|-f|filelist_UVM.f|
+!i113 0
+Z28 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z29 !s92 -work work +define+SDR_8BIT +define+S50 +incdir+../../rtl/core -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R12
+n@i@s42@v@m16400@k
+Xmodules_pkg
+Z30 !s115 dut_out
+Z31 !s115 dut_in
+R1
+R13
+R14
+V:RQGj>`;eoeLlW<RhiCgB3
+r1
+!s85 0
+31
+!i10b 1
+!s100 :lLAz:QdhH2_4XPi]mGi@1
+I:RQGj>`;eoeLlW<RhiCgB3
+S1
+R0
+w1589121798
+8../tb/modules.sv
+F../tb/modules.sv
+L0 3
+R6
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R12
+vmt48lc2m32b2
+!s110 1589154675
 !i10b 1
 !s100 cPgO?mIeRGIDlBE:bWo3F2
 I2KCE]NkQmMKG`IN]EHb0;2
 R2
 R0
-R3
+R24
 8../model/mt48lc2m32b2.v
 F../model/mt48lc2m32b2.v
 L0 42
-R4
+R6
 r1
 !s85 0
 31
-R5
-R6
-R7
+R25
+R26
+R27
 !i113 0
-R8
-R9
-R10
+R28
+R29
+R12
 vmt48lc8m8a2
 R2
 r1
@@ -62,18 +191,18 @@ r1
 !s100 ^5ZRSOJ?WUA<U_^0?]=Ca3
 IFPnm51UjnhkMdkZM>eTPZ1
 R0
-R3
+R24
 8../model/mt48lc8m8a2.v
 F../model/mt48lc8m8a2.v
-L0 44
-R4
-R5
+R23
 R6
-R7
+R25
+R26
+R27
 !i113 0
-R8
-R9
-R10
+R28
+R29
+R12
 vsdrc_bank_ctl
 R2
 r1
@@ -83,18 +212,18 @@ r1
 !s100 BJ812@85<6UgDh`_m3CFX0
 IjDPd@OHPXHLW<`[KAJjKL3
 R0
-R3
+R24
 8../../rtl/core/sdrc_bank_ctl.v
 F../../rtl/core/sdrc_bank_ctl.v
-Z11 L0 49
-R4
-R5
+Z32 L0 49
 R6
-R7
+R25
+R26
+R27
 !i113 0
-R8
-R9
-R10
+R28
+R29
+R12
 vsdrc_bank_fsm
 R2
 r1
@@ -104,18 +233,18 @@ r1
 !s100 <A[0Y@hQFhdSod6Sz6gUf0
 IBE`j9X1NVEPYa72JaKBbG2
 R0
-R3
+R24
 8../../rtl/core/sdrc_bank_fsm.v
 F../../rtl/core/sdrc_bank_fsm.v
-R11
-R4
-R5
+R32
 R6
-R7
+R25
+R26
+R27
 !i113 0
-R8
-R9
-R10
+R28
+R29
+R12
 vsdrc_bs_convert
 R2
 r1
@@ -125,18 +254,18 @@ r1
 !s100 3P=j<cbPJ7QVZVDX:LHT92
 IFJ7c^LbozO0b1C5Y@NU7]2
 R0
-R3
+R24
 8../../rtl/core/sdrc_bs_convert.v
 F../../rtl/core/sdrc_bs_convert.v
 L0 52
-R4
-R5
 R6
-R7
+R25
+R26
+R27
 !i113 0
-R8
-R9
-R10
+R28
+R29
+R12
 vsdrc_core
 R2
 r1
@@ -146,18 +275,18 @@ r1
 !s100 I@?QLD1F12`YQ^TFD:nme2
 I8=Q_i735cNTPXTSYPmF_e2
 R0
-w1588636482
+w1588877066
 8../../rtl/core/sdrc_core.v
 F../../rtl/core/sdrc_core.v
 L0 77
-R4
-R5
 R6
-R7
+R25
+R26
+R27
 !i113 0
-R8
-R9
-R10
+R28
+R29
+R12
 vsdrc_req_gen
 R2
 r1
@@ -167,18 +296,18 @@ r1
 !s100 lS]];J:O2b]i9MF[SM0>Z2
 I7QNA]B1i9XbjKn:2Z@SWb0
 R0
-R3
+R24
 8../../rtl/core/sdrc_req_gen.v
 F../../rtl/core/sdrc_req_gen.v
 L0 79
-R4
-R5
 R6
-R7
+R25
+R26
+R27
 !i113 0
-R8
-R9
-R10
+R28
+R29
+R12
 vsdrc_xfr_ctl
 R2
 r1
@@ -188,39 +317,150 @@ r1
 !s100 5iHoN?fBe0NWc?FLZDDHO1
 Id9mmX^3;7N4i4eSE95aR^3
 R0
-R3
+R24
 8../../rtl/core/sdrc_xfr_ctl.v
 F../../rtl/core/sdrc_xfr_ctl.v
 L0 66
-R4
-R5
+R6
+R25
+R26
+R27
+!i113 0
+R28
+R29
+R12
+Xsequences
+R30
+R31
+R1
+R13
+VHCFJ4NDL96z[Z<VLJnLHj2
+r1
+!s85 0
+31
+!i10b 1
+!s100 zg5iSj`=g3aJC<6;RB]:62
+IHCFJ4NDL96z[Z<VLJnLHj2
+S1
+R0
+w1589154218
+8../tb/sequences.sv
+F../tb/sequences.sv
+L0 3
 R6
 R7
-!i113 0
 R8
 R9
+!i113 0
 R10
-vtb_core
-DXx6 sv_std 3 std 0 22 AD7iAPLo6nTIKk<N0eo=D3
+R11
+R12
+Xtb_sv_unit
+R1
+R13
+R14
+R15
+R16
+VLiIQ_7ILDQf]5>GMED9m12
+r1
+!s85 0
+31
+!i10b 1
+!s100 o2oSog<3mF3N4POZkc?Qh0
+ILiIQ_7ILDQf]5>GMED9m12
+!i103 1
+S1
+R0
+R4
+R18
+R19
+Z33 F/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/uvm_macros.svh
+Z34 F/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_version_defines.svh
+Z35 F/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_message_defines.svh
+Z36 F/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_phase_defines.svh
+Z37 F/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_object_defines.svh
+Z38 F/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_printer_defines.svh
+Z39 F/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_tlm_defines.svh
+Z40 F/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/tlm1/uvm_tlm_imps.svh
+Z41 F/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_sequence_defines.svh
+Z42 F/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_callback_defines.svh
+Z43 F/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_reg_defines.svh
+Z44 F/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/../verilog_src/uvm-1.1d/src/macros/uvm_deprecated_defines.svh
+F../tb/constants.sv
+R5
+L0 5
+R6
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R12
+Xtests
+R1
+R13
+R14
+R15
+VOQGHb=Xo5h^Y=NGn`5Q@g0
+r1
+!s85 0
+31
+!i10b 1
+!s100 LeeVCRoQd@Ungz>P[XXST3
+IOQGHb=Xo5h^Y=NGn`5Q@g0
+S1
+R0
+w1589077573
+8../tb/tests.sv
+F../tb/tests.sv
+R33
+R34
+R35
+R36
+R37
+R38
+R39
+R40
+R41
+R42
+R43
+R44
+L0 1
+R6
+R7
+R8
+R9
+!i113 0
+R10
+R11
+R12
+vtop
+R1
+R13
+R14
+R15
+R16
+R17
 R2
 r1
 !s85 0
 31
 !i10b 1
-!s100 Kfn:8G=oid6UKKoR`idjB0
-IN7RGPlc0@Cec8JK027Khh3
-!s105 tb_core_sv_unit
+!s100 WFYY?SB?fWJ`zzjWMfNA62
+I<ci3W@DJli_aoEfz5g[g<0
+R3
 S1
 R0
-w1588794842
-8../tb/tb_core.sv
-F../tb/tb_core.sv
-L0 51
 R4
-R5
+R18
+R19
+L0 54
 R6
 R7
-!i113 0
 R8
 R9
+!i113 0
 R10
+R11
+R12

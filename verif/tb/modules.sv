@@ -7,13 +7,13 @@ import sequences::*;
 
 typedef uvm_sequencer #(app_transaction_in) app_sequencer_in;
 
-class sdr_dut_config extends uvm_object;
-	`uvm_object_utils(sdr_dut_config)
-	
-	virtual dut_in	dut_vi_in;
-	virtual	dut_out	dut_vi_out;
-
-endclass:sdr_dut_config
+//class sdr_dut_config extends uvm_object;
+//	`uvm_object_utils(sdr_dut_config)
+//	
+//	virtual dut_in	dut_vi_in;
+//	virtual	dut_out	dut_vi_out;
+//
+//endclass:sdr_dut_config
 
 class app_driver_in extends uvm_driver#(app_transaction_in); 
 	`uvm_component_utils(app_driver_in)

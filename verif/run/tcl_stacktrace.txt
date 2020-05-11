@@ -1,0 +1,37 @@
+Sat May 09 22:01:04 CDT 2020
+Trace back: can't unset "::wait_for_it": no such variable
+    while executing
+"unset ::wait_for_it"
+    (object "::.main_pane.source.interior.cs.body.srcobj" method "::vsimwidgets::Srcobj::ExecBusyCmd" body line 15)
+    invoked from within
+"$_srcedit ExecBusyCmd $timeout "<< [_name]s Results""
+    (object "::.main_pane.source.interior.cs.body.srcobj.extra_f.drivers" method "::vsimwidgets::Srcedit::ResultsWidget::_update" body line 56)
+    invoked from within
+"::.main_pane.source.interior.cs.body.srcobj.extra_f.drivers _update -data {{sim:/tb_core/#INITIAL#251 sim:/tb_core/app_wr_en_n /home/ecelrc/students/c..."
+    ("eval" body line 1)
+    invoked from within
+"eval $o _update $args"
+    (procedure "::vsimwidgets::Srcedit::ResultsWidget::Update" body line 10)
+    invoked from within
+"vsimwidgets::Srcedit::ResultsWidget::Update  -data $DriverList -signal $sig -from $drivers_or_readers"
+    (procedure "::vsimwidgets::Srcedit::HandleDrivers" body line 90)
+    invoked from within
+"vsimwidgets::Srcedit::HandleDrivers [lindex $sigList 0] $d_or_r"
+    (procedure "_showDFReadersDrivers" line 41)
+    invoked from within
+"_showDFReadersDrivers drivers .main_pane.wave.interior.cs.body.pw.wf 1"
+    ("eval" body line 1)
+    invoked from within
+"eval _showDFReadersDrivers "drivers" $winname $classic $args"
+    (procedure "Wave::ShowDFDrivers" line 2)
+    invoked from within
+"Wave::ShowDFDrivers $top 1"
+    (procedure "Wave::1Up" line 27)
+    invoked from within
+"Wave::1Up $widget $x $y"
+    (procedure "Wave::SelectUp" line 4)
+    invoked from within
+"Wave::SelectUp	 .main_pane.wave.interior.cs.body.pw.wf.grid.row0,wave.data 678 193 1424 459 "
+    (command bound to event)
+  <2:/misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/linux_x86_64/tk8.6/bgerror.tcl:106: ::tkerror {can't unset "::wait_for_it": no such variable}
+  <1:eval:1: ::tk::dialog::error::bgerror {can't unset "::wait_for_it": no such variable}
