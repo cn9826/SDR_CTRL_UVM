@@ -65,6 +65,7 @@ class app_transaction_out extends uvm_sequence_item;
 	logic				app_req_ack;
 	logic				app_wr_next_req;
 	logic	[`APP_DW-1 : 0]		app_rd_data;
+	logic				app_rd_valid;	
 
 	function new (string name = "");
 		super.new(name);

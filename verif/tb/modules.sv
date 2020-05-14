@@ -4,7 +4,7 @@ package modules_pkg;
 
 import uvm_pkg::*;
 import sequences::*;
-
+import scoreboard::*; 
 typedef uvm_sequencer #(app_transaction_in) app_sequencer_in;
 
 //class sdr_dut_config extends uvm_object;
@@ -55,8 +55,11 @@ class app_monitor_in extends uvm_monitor;
 // and TLM Analysis Port declarations to broadcast captured data to others
 	`uvm_component_utils(app_monitor_in)
 	uvm_analysis_port #(app_transaction_in) aport;
-	sdr_dut_config dut_config_0;
-	virtual dut_in 	dut_vi_in;		
+	sdr_dut_config 	dut_config_0;
+	virtual dut_in 	dut_vi_in;
+	virtual dut_out dut_vi_out;
+
+	int burst_write_cnt;
 
 	function new(string name, uvm_component parent);
 		super.new(name, parent);	
@@ -66,25 +69,44 @@ class app_monitor_in extends uvm_monitor;
 		//dut_config_0 = sdr_dut_config::type_id::create("dut_config_0");
 		aport = new("aport",this);
 		assert( uvm_config_db#(sdr_dut_config)::get(this, "", "dut_config", dut_config_0));
-		dut_vi_in = dut_config_0.dut_vi_in; 
+		dut_vi_in = dut_config_0.dut_vi_in;
+		dut_vi_out = dut_config_0.dut_vi_out;
+		burst_write_cnt = 0;
 	endfunction:build_phase
-	
+
+	function app_transaction_in drive_app_tx_in();
+		app_transaction_in app_tx_in = app_transaction_in::type_id::create("app_tx_in");
+		app_tx_in.reset_n	=	dut_vi_in.reset_n;     
+		app_tx_in.app_req       =       dut_vi_in.app_req;     
+		app_tx_in.app_wr_en_n   =       dut_vi_in.app_wr_en_n; 
+		app_tx_in.app_req_wr_n  =       dut_vi_in.app_req_wr_n;
+		app_tx_in.app_req_len   =       dut_vi_in.app_req_len; 
+		app_tx_in.app_req_addr  =       dut_vi_in.app_req_addr;
+		app_tx_in.app_wr_data   =       dut_vi_in.app_wr_data; 
+		app_tx_in.app_req_wrap  =       dut_vi_in.app_req_wrap;
+			
+		return app_tx_in;
+	endfunction: drive_app_tx_in
+
 	task run_phase(uvm_phase phase);
 		// to introduce 1 clk cycle delay after the interface signal wiggles have happend 
-		@(negedge dut_vi_in.sdram_clk);
+		//@(negedge dut_vi_in.sdram_clk);
 		forever begin
-			app_transaction_in app_tx_in = app_transaction_in::type_id::create("app_tx_in");
 			@(negedge dut_vi_in.sdram_clk);
-			app_tx_in.reset_n	=	dut_vi_in.reset_n;     
-			app_tx_in.app_req       =       dut_vi_in.app_req;     
-			app_tx_in.app_wr_en_n   =       dut_vi_in.app_wr_en_n; 
-			app_tx_in.app_req_wr_n  =       dut_vi_in.app_req_wr_n;
-			app_tx_in.app_req_len   =       dut_vi_in.app_req_len; 
-			app_tx_in.app_req_addr  =       dut_vi_in.app_req_addr;
-			app_tx_in.app_wr_data   =       dut_vi_in.app_wr_data; 
-			app_tx_in.app_req_wrap  =       dut_vi_in.app_req_wrap;
-			// send specified values to all connected interface
-			aport.write(app_tx_in);
+			if (dut_vi_in.app_req && dut_vi_in.app_req_wr_n == 0) begin	
+				app_transaction_in app_tx_in = drive_app_tx_in();
+				burst_write_cnt = dut_vi_in.app_req_len - 1;
+				aport.write(app_tx_in);
+			end
+			if (burst_write_cnt > 0 && dut_vi_out.app_wr_next_req == 1) begin
+				app_transaction_in app_tx_in;
+				@(negedge dut_vi_in.sdram_clk);
+				@(posedge dut_vi_in.sdram_clk);	
+				app_tx_in = drive_app_tx_in();
+				burst_write_cnt --;
+				aport.write(app_tx_in);
+				//`uvm_info("MONITOR_IN_WRITE",$sformatf("Address: %8h    Written Data: %8h    Burst Write Idx: %2d", app_tx_in.app_req_addr, app_tx_in.app_wr_data, (dut_vi_in.app_req_len-burst_write_cnt)), UVM_LOW);
+			end
 		end
 	endtask: run_phase
 endclass:app_monitor_in
@@ -106,34 +128,24 @@ class app_monitor_out extends uvm_monitor;
 		dut_vi_out = dut_config_0.dut_vi_out;	
 	endfunction: build_phase
 
-	task run_phase(uvm_phase phase);
-		@(negedge dut_vi_out.sdram_clk);	
-		@(negedge dut_vi_out.sdram_clk);
-		forever begin
-			sdr_transaction_out sdr_tx_out = sdr_transaction_out::type_id::create("sdr_tx_out");
-			app_transaction_out app_tx_out = app_transaction_out::type_id::create("app_tx_out");		
-			@(negedge dut_vi_out.sdram_clk);
-			app_tx_out.app_req_ack		=	dut_vi_out.app_req_ack;
-			app_tx_out.app_wr_next_req	= 	dut_vi_out.app_wr_next_req;
-			app_tx_out.app_rd_data		= 	dut_vi_out.app_rd_data;
+	function app_transaction_out drive_app_tx_out();
+		app_transaction_out app_tx_out = app_transaction_out::type_id::create("app_tx_out");
+		app_tx_out.app_req_ack		=	dut_vi_out.app_req_ack;
+		app_tx_out.app_wr_next_req	= 	dut_vi_out.app_wr_next_req;
+		app_tx_out.app_rd_data		= 	dut_vi_out.app_rd_data;
+		app_tx_out.app_rd_valid		= 	dut_vi_out.app_rd_valid;
+		return app_tx_out;
+	endfunction: drive_app_tx_out
 
-			// command
-			sdr_tx_out.sdr_cs_n		=	dut_vi_out.sdr_cs_n;		
-        	        sdr_tx_out.sdr_cke      	=	dut_vi_out.sdr_cke;
-        	        sdr_tx_out.sdr_ras_n    	=	dut_vi_out.sdr_ras_n;
-        	        sdr_tx_out.sdr_cas_n    	=	dut_vi_out.sdr_cas_n;
-        	        sdr_tx_out.sdr_we_n     	=	dut_vi_out.sdr_we_n;	
-        	        sdr_tx_out.sdr_init_done	=	dut_vi_out.sdr_init_done;
-        	        
-			//address
-			sdr_tx_out.sdr_ba  		=	dut_vi_out.sdr_ba;
-        	        sdr_tx_out.sdr_addr		=	dut_vi_out.sdr_addr;
-        	       
-		       	//data
-			sdr_tx_out.sdr_dqm 		=	dut_vi_out.sdr_dqm; 	
-        	        sdr_tx_out.pad_sdr_din		=	dut_vi_out.pad_sdr_din;	
-        	        sdr_tx_out.sdr_dout		=	dut_vi_out.sdr_dout;	
-        	        sdr_tx_out.sdr_den_n		=	dut_vi_out.sdr_den_n;	
+	task run_phase(uvm_phase phase);
+	//	@(negedge dut_vi_out.sdram_clk);	
+	//	@(negedge dut_vi_out.sdram_clk);
+		forever begin
+			@(negedge dut_vi_out.sdram_clk);
+			if (dut_vi_out.app_rd_valid) begin
+				app_transaction_out app_tx_out = drive_app_tx_out();
+				aport.write(app_tx_out);
+			end
 		end
 	endtask:run_phase
 endclass:app_monitor_out
@@ -190,8 +202,7 @@ class app_only_env extends uvm_env;
 	app_agent_in		app_agent_in_0;
 	app_agent_out		app_agent_out_0;
 	// fill in declaration of subscribers
-	// fill in declaration of an Application Layer scoreboard
-	
+	app_scoreboard 		app_scoreboard_0;	
 	function new(string name, uvm_component parent);
 		super.new(name, parent);
 	endfunction:new
@@ -200,14 +211,16 @@ class app_only_env extends uvm_env;
 		app_agent_in_0 = app_agent_in::type_id::create("app_agent_in_0", this);
 		app_agent_out_0 = app_agent_out::type_id::create("app_agent_out_0", this);
 		// fill in instantiation of subscribers
-		// fill in instantiation of an Application Layer scoreboard
+		app_scoreboard_0 = app_scoreboard::type_id::create("app_scoreboard_0", this);	
 	endfunction: build_phase
 
 	function void connect_phase(uvm_phase phase);
 		// fill in analysis port connection between app_agent_in_0 and subscriber_in	
-		// fill in analysis port connection between app_agent_outt0 and subscriber_out	
-		// fill in analysis port connection between app_agent_in_0 and scoreboard_in	
-		// fill in analysis port connection between app_agent_outt0 and scoreboard_out	
+		// fill in analysis port connection between app_agent_out_0 and subscriber_out	
+		// fill in analysis port connection between app_agent_in_0 and scoreboard_in
+		app_agent_in_0.aport.connect(app_scoreboard_0.app_sb_in);
+		// fill in analysis port connection between app_agent_outt0 and scoreboard_out
+		app_agent_out_0.aport.connect(app_scoreboard_0.app_sb_out);
 	endfunction:connect_phase
 
 	function void start_of_simulation_phase(uvm_phase phase);

@@ -1,3 +1,7 @@
+# 
+# 
+# 
+# 
 # //  ModelSim SE-64 10.6 Dec 13 2016Linux 3.10.0-1062.9.1.el7.x86_64
 # //
 # //  Copyright 1991-2016 Mentor Graphics Corporation
@@ -12,7 +16,7 @@
 # //  18 U.S.C. Section 1905.
 # //
 # vsim -novopt top 
-# Start time: 16:10:49 on May 11,2020
+# Start time: 11:36:33 on May 14,2020
 # ** Warning: (vsim-8891) All optimizations are turned off because the -novopt switch is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features please see the User's Manual section on Preserving Object Visibility with vopt.
 # Refreshing /home/ecelrc/students/cni/EE382M-Verification/sdr_ctrl/verif/run/work.top
 # Refreshing /home/ecelrc/students/cni/EE382M-Verification/sdr_ctrl/verif/run/work.tb_sv_unit
@@ -23,9 +27,11 @@
 # Refreshing /home/ecelrc/students/cni/EE382M-Verification/sdr_ctrl/verif/run/work.dut_out
 # Loading work.dut_out
 # Refreshing /home/ecelrc/students/cni/EE382M-Verification/sdr_ctrl/verif/run/work.modules_pkg
+# Refreshing /home/ecelrc/students/cni/EE382M-Verification/sdr_ctrl/verif/run/work.scoreboard
 # Refreshing /home/ecelrc/students/cni/EE382M-Verification/sdr_ctrl/verif/run/work.sequences
 # Loading mtiUvm.uvm_pkg
 # Loading work.sequences
+# Loading work.scoreboard
 # Loading work.modules_pkg
 # Loading work.tests
 # Loading work.tb_sv_unit
@@ -50,8 +56,6 @@
 # Loading work.mt48lc8m8a2
 # Loading mtiUvm.questa_uvm_pkg
 # Loading /misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/linux_x86_64/uvm_dpi.so
-sourcea add_wave_UVM.tcl
-# invalid command name "sourcea"
 source add_wave_UVM.tcl
 # ** Warning: (vsim-8891) All optimizations are turned off because the -novopt switch is in effect. This will cause your simulation to run very slowly. If you are using this switch to preserve visibility for Debug or PLI features please see the User's Manual section on Preserving Object Visibility with vopt.
 # Loading /misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/uvm-1.1d/linux_x86_64/uvm_dpi.so
@@ -78,23 +82,50 @@ source add_wave_UVM.tcl
 # UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(215) @ 0: reporter [Questa UVM] QUESTA_UVM-1.2.3
 # UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(217) @ 0: reporter [Questa UVM]  questa_uvm::init(+struct)
 # UVM_INFO @ 0 ns: reporter [RNTST] Running test multi_wr_rd_test...
-# UVM_INFO verilog_src/uvm-1.1d/src/base/uvm_objection.svh(1268) @ 2575 ns: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+# UVM_INFO ../tb/scoreboard.sv(85) @ 2825 ns: uvm_test_top.top_env_0.app_scoreboard_0 [PASS] PASS: Address: 02a865cf    Written Data: f74d29bf    Read Data: f74d29bf    Burst Write Idx:  1
+# UVM_INFO ../tb/scoreboard.sv(85) @ 2865 ns: uvm_test_top.top_env_0.app_scoreboard_0 [PASS] PASS: Address: 02a865cf    Written Data: 94e7b031    Read Data: 94e7b031    Burst Write Idx:  2
+# UVM_INFO ../tb/scoreboard.sv(85) @ 2905 ns: uvm_test_top.top_env_0.app_scoreboard_0 [PASS] PASS: Address: 02a865cf    Written Data: 872496e7    Read Data: 872496e7    Burst Write Idx:  3
+# UVM_INFO ../tb/scoreboard.sv(85) @ 2945 ns: uvm_test_top.top_env_0.app_scoreboard_0 [PASS] PASS: Address: 02a865cf    Written Data: d0c9e4e6    Read Data: d0c9e4e6    Burst Write Idx:  4
+# UVM_INFO ../tb/scoreboard.sv(85) @ 3045 ns: uvm_test_top.top_env_0.app_scoreboard_0 [PASS] PASS: Address: 032ab30e    Written Data: d5511817    Read Data: d5511817    Burst Write Idx:  1
+# UVM_INFO ../tb/scoreboard.sv(85) @ 3085 ns: uvm_test_top.top_env_0.app_scoreboard_0 [PASS] PASS: Address: 032ab30e    Written Data: b607b3b7    Read Data: b607b3b7    Burst Write Idx:  2
+# UVM_INFO ../tb/scoreboard.sv(85) @ 3125 ns: uvm_test_top.top_env_0.app_scoreboard_0 [PASS] PASS: Address: 032ab30e    Written Data: 8031241e    Read Data: 8031241e    Burst Write Idx:  3
+# UVM_INFO ../tb/scoreboard.sv(85) @ 3165 ns: uvm_test_top.top_env_0.app_scoreboard_0 [PASS] PASS: Address: 032ab30e    Written Data: b94eb3b1    Read Data: b94eb3b1    Burst Write Idx:  4
+# UVM_INFO ../tb/scoreboard.sv(85) @ 3345 ns: uvm_test_top.top_env_0.app_scoreboard_0 [PASS] PASS: Address: 022b4dc6    Written Data: dea5fc73    Read Data: dea5fc73    Burst Write Idx:  1
+# UVM_INFO ../tb/scoreboard.sv(85) @ 3385 ns: uvm_test_top.top_env_0.app_scoreboard_0 [PASS] PASS: Address: 022b4dc6    Written Data: f899f5ae    Read Data: f899f5ae    Burst Write Idx:  2
+# UVM_INFO ../tb/scoreboard.sv(85) @ 3425 ns: uvm_test_top.top_env_0.app_scoreboard_0 [PASS] PASS: Address: 022b4dc6    Written Data: b65fd8d4    Read Data: b65fd8d4    Burst Write Idx:  3
+# UVM_INFO ../tb/scoreboard.sv(85) @ 3465 ns: uvm_test_top.top_env_0.app_scoreboard_0 [PASS] PASS: Address: 022b4dc6    Written Data: a1d15f9e    Read Data: a1d15f9e    Burst Write Idx:  4
+# UVM_INFO ../tb/scoreboard.sv(85) @ 3575 ns: uvm_test_top.top_env_0.app_scoreboard_0 [PASS] PASS: Address: 03d00342    Written Data: fae91cfc    Read Data: fae91cfc    Burst Write Idx:  1
+# UVM_INFO ../tb/scoreboard.sv(85) @ 3615 ns: uvm_test_top.top_env_0.app_scoreboard_0 [PASS] PASS: Address: 03d00342    Written Data: 6f60ac4b    Read Data: 6f60ac4b    Burst Write Idx:  2
+# UVM_INFO ../tb/scoreboard.sv(85) @ 3655 ns: uvm_test_top.top_env_0.app_scoreboard_0 [PASS] PASS: Address: 03d00342    Written Data: 510eea5f    Read Data: 510eea5f    Burst Write Idx:  3
+# UVM_INFO ../tb/scoreboard.sv(85) @ 3695 ns: uvm_test_top.top_env_0.app_scoreboard_0 [PASS] PASS: Address: 03d00342    Written Data: b267fc14    Read Data: b267fc14    Burst Write Idx:  4
+# UVM_INFO verilog_src/uvm-1.1d/src/base/uvm_objection.svh(1268) @ 3695 ns: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
 # 
 # --- UVM Report Summary ---
 # 
 # ** Report counts by severity
-# UVM_INFO :    4
+# UVM_INFO :   20
 # UVM_WARNING :    0
 # UVM_ERROR :    0
 # UVM_FATAL :    0
 # ** Report counts by id
+# [PASS]    16
 # [Questa UVM]     2
 # [RNTST]     1
 # [TEST_DONE]     1
 # ** Note: $finish    : /misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/linux_x86_64/../verilog_src/uvm-1.1d/src/base/uvm_root.svh(430)
-#    Time: 2575 ns  Iteration: 60  Instance: /top
+#    Time: 3695 ns  Iteration: 60  Instance: /top
 # 1
 # Break in Task uvm_pkg/uvm_root::run_test at /misc/linuxws/packages/mentor_2016/modelsim10.6/modeltech/linux_x86_64/../verilog_src/uvm-1.1d/src/base/uvm_root.svh line 430
 # Causality operation skipped due to absence of debug database file
-# End time: 16:23:41 on May 11,2020, Elapsed time: 0:12:52
-# Errors: 1, Warnings: 1
+clear all 
+# [3;J[H[2J
+clear
+# [3;J[H[2J
+clear
+# [3;J[H[2J
+clear
+# [3;J[H[2J
+clear
+# [3;J[H[2J
+# End time: 11:52:14 on May 14,2020, Elapsed time: 0:15:41
+# Errors: 0, Warnings: 1
