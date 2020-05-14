@@ -201,6 +201,9 @@ class app_only_env extends uvm_env;
 	`uvm_component_utils(app_only_env)
 	app_agent_in		app_agent_in_0;
 	app_agent_out		app_agent_out_0;
+	app_subscriber_in	app_subscriber_in_0;
+	app_subscriber_out	app_subscriber_out_0;
+	sdr_subscriber_out	sdr_subscriber_out_0;
 	// fill in declaration of subscribers
 	app_scoreboard 		app_scoreboard_0;	
 	function new(string name, uvm_component parent);
@@ -210,6 +213,11 @@ class app_only_env extends uvm_env;
 	function void build_phase(uvm_phase phase);
 		app_agent_in_0 = app_agent_in::type_id::create("app_agent_in_0", this);
 		app_agent_out_0 = app_agent_out::type_id::create("app_agent_out_0", this);
+		app_subscriber_in_0 = app_subscriber_in_0::type_id::create("app_subscriber_in_0", this);
+		app_subscriber_out = app_subscriber_out_0::type_id::create("app_subscriber_out", this);
+		sdr_subscriber_out = sdr_subscriber_out_0::type_id::create("sdr_subscriber_out_0", this);
+
+		
 		// fill in instantiation of subscribers
 		app_scoreboard_0 = app_scoreboard::type_id::create("app_scoreboard_0", this);	
 	endfunction: build_phase
