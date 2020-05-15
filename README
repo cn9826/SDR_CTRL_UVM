@@ -1,0 +1,5 @@
+To run the UVM testbench simulation in ModelSim:
+	module load mentor/modelsim/2016
+	navigate to ./verif/run/
+	type "./compile_UVM.modelsim SDR_8BIT &"
+	in ModelSim, issue command "source add_wave_UVM.tcl"	
