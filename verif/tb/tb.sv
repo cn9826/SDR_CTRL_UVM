@@ -82,7 +82,7 @@ dut u_dut(
 
 
 initial begin
-	num_self_checks = 4;
+	num_self_checks = 2000;
 	uvm_config_db #(virtual dut_in)::set(null,"uvm_test_top","dut_vi_in",dut_in_0);
 	uvm_config_db #(virtual dut_out)::set(null,"uvm_test_top","dut_vi_out",dut_out_0);
 		

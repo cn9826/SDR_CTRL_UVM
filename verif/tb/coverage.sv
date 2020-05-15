@@ -1,139 +1,158 @@
 `include "uvm_macros.svh"
+`include "constants.sv"
 package coverage;
 import sequences::*;
 import uvm_pkg::*;
 
 class app_subscriber_in extends uvm_subscriber #(app_transaction_in);
     `uvm_component_utils(app_subscriber_in)
-/*
-    //Declare Variables
-    logic [31:0] A;
-    logic [31:0] B;
-    logic [4:0] opcode;
-    logic cin;
-
-    //TODO: Add covergroups for the inputs
+	logic				reset_n;
+	logic				app_req;
+	logic	   [`APP_BW-1:0]	app_wr_en_n;
+	logic				app_req_wr_n;
+	logic	   [`APP_RW-1:0]  	app_req_len;	// can be random later
+	logic [`APP_AW-1 : 0]	app_req_addr;
+	logic [`APP_DW-1:  0]	app_wr_data;
+	logic				app_req_wrap;	// can be random later
+	// local variables
+	logic [`APP_AW-1 : 0]		prev_req_addr;
+	logic 				prev_req = 0;
+	//logic 				sample ;
+	
 	covergroup inputs;
-	cp_A : coverpoint A
-	{
-	bins one = {32'h5555_5555};
-	bins two = {32'hFFFF_FFFF};
-	bins three = {32'h5555_5555};
-	bins four = {32'hAAAA_AAAA};
-	bins five = {32'h5A5A_5A5A};
-	bins six = {32'hA5A5_A5A5};
+	
+	wrap : coverpoint app_req_wrap;
+	wdata_1024 : coverpoint app_wr_data{
+		bins range[1024] = {[0:$]};
 	}
-	cp_B : coverpoint B
-	{
-	bins one_b = {32'h5555_5555};
-	bins two_b = {32'hFFFF_FFFF};
-	bins three_b = {32'h5555_5555};
-	bins four_b = {32'hAAAA_AAAA};
-	bins five_b = {32'h5A5A_5A5A};
-	bins six_b = {32'hA5A5_A5A5};
+	addr_1024_bin : coverpoint app_req_addr{
+		bins range[1024] = {[0:$]};
 	}
-	cp_opcode : coverpoint opcode{
-	bins logic_operation = {5'b00111, 5'b00011, 5'b00000, 5'b00101};
-	bins compare_operation = { 5'b01100, 5'b01001, 5'b01110,5'b01011,5'b01111,5'b01010};
-	bins arithmatic_operation = {5'b10101, 5'b10001, 5'b10100, 5'b10000, 5'b10111, 5'b10110};
-	bins shift_operation = {5'b11010, 5'b11011, 5'b11100, 5'b11101, 5'b11000, 5'b11001};
-	}
-	cp_cin : coverpoint cin{
-	bins zero_cin = {1'b0};
-	bins one_cin = {1'b1};
+	page_addr : coverpoint app_req_addr[9:0]{// within a page
+		bins range[] = {[0:$]};
 	}
 	
-	point1: cross cp_A, cp_opcode;
-	point2: cross cp_B, cp_opcode;
-	point3: cross cp_A, cp_B, cp_opcode, cp_cin;
-    endgroup: inputs
-
-
-    function new(string name, uvm_component parent);
+	endgroup: inputs
+	function new(string name, uvm_component parent);
         super.new(name,parent);
-        // TODO: Uncomment
-         inputs=new;
+       	  inputs=new;
+   	endfunction: new
+    	function void write(app_transaction_in t);
+        reset_n={t.reset_n};
+        app_req={t.app_req};
+        app_wr_en_n={t.app_wr_en_n};
+        app_req_wr_n={t.app_req_wr_n};
+        app_req_len={t.app_req_len};
+        app_req_addr={t.app_req_addr};
+        app_wr_data={t.app_wr_data};
+        app_req_wrap={t.app_req_wrap};
+	
+       
+        inputs.sample();
         //
-    endfunction: new
+	//sample = ! sample; //this should trigger the cover immediatlym before prev_req_addr is updated?
+	//if(app_req != prev_req)//if new request
+	//begin	
+	//	prev_req  = app_req;
+	//	prev_req_addr = app_req_addr;
+	//end
 
-    function void write(alu_transaction_in t);
-        A={t.A};
-        B={t.B};
-        opcode={t.opcode};
-        cin={t.CIN};
-        // TODO: Uncomment
-         inputs.sample();
-        //
-    endfunction: write*/
+    endfunction: write
 
 endclass: app_subscriber_in
 
 class app_subscriber_out extends uvm_subscriber #(app_transaction_out);
     `uvm_component_utils(app_subscriber_out)
-/*
-    logic [31:0] out;
-    logic cout;
-    logic vout;
+	logic				app_req_ack;
+	logic				app_wr_next_req;
+	logic	[`APP_DW-1 : 0]		app_rd_data;
+	logic				app_rd_valid;
+	//internal signals
+	//logic sample; 
+	logic [`APP_DW-1 : 0]		zero = 0;
 
-    //TODO: Add covergroups for the outputs
+	covergroup outputs;
+	rdata_1024_bin : coverpoint app_rd_data
+	{
+		bins range[1024] = {[0:$]};
+	}
+	// cannot do this otherwise overflows
+	//rdata_all : coverpoint app_rd_data{
+	//	bins range[] = {[0:$]};
+	//}
+	
+	//req_ack: coverpoint app_req_ack;
+	endgroup: outputs
 
-    covergroup outputs;
-	cp_out: coverpoint out;
-	cp_cout: coverpoint cout;
-	cp_vout: coverpoint vout;	
-    endgroup: outputs
-  
-
-function new(string name, uvm_component parent);
-    super.new(name,parent);
-    //TODO: Uncomment
-     outputs=new;
-    //
-endfunction: new
-
-function void write(alu_transaction_out t);
-    out={t.OUT};
-    cout={t.COUT};
-    vout={t.VOUT};
-    //TODO: Uncomment
-    outputs.sample();
-    //
-endfunction: write
-*/
+	function new(string name, uvm_component parent);
+        	super.new(name,parent);
+        // DONE: Uncomment if using covergroup
+        	outputs=new;
+        
+    	endfunction: new //can't use cover group to check if two writes are same consectivly because of complex temporal logic
+	
+	function void write(app_transaction_out t);
+        app_req_ack={t.app_req_ack};
+        app_wr_next_req={t.app_wr_next_req};
+        app_rd_data={t.app_rd_data};
+        app_rd_valid={t.app_rd_valid};
+        // DONE: Uncomment if using covergroup 
+         outputs.sample();
+        
+		
+    	endfunction: write
+	
 endclass: app_subscriber_out
 
-class sdr_transaction_out extends uvm_subscriber #(sdr_transaction_out);
-    `uvm_component_utils(sdr_transaction_out)
-/*
-    logic [31:0] out;
-    logic cout;
-    logic vout;
+class sdr_subscriber_out extends uvm_subscriber #(sdr_transaction_out);
+    `uvm_component_utils(sdr_subscriber_out)
+		// command
+	logic			sdr_cs_n;
+	logic			sdr_cke;
+	logic			sdr_ras_n;
+	logic			sdr_cas_n;
+	logic			sdr_we_n;	
+	logic			sdr_init_done;
+	
+	//address
+	logic			sdr_ba;
+	logic			sdr_addr;
 
-    //TODO: Add covergroups for the outputs
+	// data
+	logic	[`SDR_BW-1:0]	sdr_dqm; 	//SDRAM Data Mask
+	logic	[`SDR_DW-1:0]	pad_sdr_din; 	//data read from SDRAM 
+	logic	[`SDR_DW-1:0]	sdr_dout;	//data written to SDRAM 
+	logic	[`SDR_BW-1:0]	sdr_den_n;	//SDRAM Data Enable
 
-    covergroup outputs;
-	cp_out: coverpoint out;
-	cp_cout: coverpoint cout;
-	cp_vout: coverpoint vout;	
-    endgroup: outputs
-  
+	//internal signals
+	//logic sample; 
+	logic [`SDR_DW-1 : 0] zero = 0;
+	covergroup sdr;
+	//cpo_sdr_dout : coverpoint sdr_dout{
+	//	bins empty = {zero}; // read empty. cover to check if stuck at 1
+	//	bins full = {~zero}; //read all ones. cover to check if stuck at 0
+	//}
+	endgroup: sdr
+	function new(string name, uvm_component parent);
+       	 super.new(name,parent);
+         sdr=new;
+        //
+    	endfunction: new
+	function void write(sdr_transaction_out t);
+        sdr_cs_n={t.sdr_cs_n};
+        sdr_cke={t.sdr_cke};
+        sdr_ras_n={t.sdr_ras_n};
+        sdr_cas_n={t.sdr_cas_n};
+        sdr_we_n={t.sdr_we_n};
+        sdr_init_done={t.sdr_init_done};
+        sdr_ba={t.sdr_ba};
+        sdr_addr={t.sdr_addr};
+        // TODO: Uncomment
+         sdr.sample();
+        //
+    endfunction: write
+	
 
-function new(string name, uvm_component parent);
-    super.new(name,parent);
-    //TODO: Uncomment
-     outputs=new;
-    //
-endfunction: new
-
-function void write(alu_transaction_out t);
-    out={t.OUT};
-    cout={t.COUT};
-    vout={t.VOUT};
-    //TODO: Uncomment
-    outputs.sample();
-    //
-endfunction: write
-*/
-endclass: sdr_transaction_out
+endclass: sdr_subscriber_out
 
 endpackage: coverage

@@ -8,6 +8,6 @@ else
 endif
 
 vlog -work work +define+$1 -f filelist_UVM.f
-vlog +cover -sv ../tb/interface.sv ../tb/sequences.sv ../tb/scoreboard.sv ../tb/modules.sv ../tb/tests.sv ../tb/tb.sv  
+vlog +cover -sv ../tb/interface.sv ../tb/sequences.sv ../tb/scoreboard.sv ../tb/coverage.sv ../tb/modules.sv ../tb/tests.sv ../tb/tb.sv  
 vsim -novopt top 
 
